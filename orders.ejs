@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<section class="orders-section">
+    <div class="container">
+        <h1>My Orders</h1>
+        
+        <% if (orders.length === 0) { %>
+            <div class="no-orders">
+                <i class="fas fa-box-open"></i>
+                <p>You haven't placed any orders yet.</p>
+                <a href="/products" class="btn btn-primary">Start Shopping</a>
+            </div>
+        <% } else { %>
+            <div class="orders-list">
+                <% orders.forEach(order => { %>
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <h3>Order #<%= order._id %></h3>
+                                <p class="order-date">
+                                    <i class="fas fa-calendar"></i>
+                                    <%= new Date(order.createdAt).toLocaleDateString() %>
+                                </p>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge badge-<%= order.status.toLowerCase() %>">
+                                    <%= order.status %>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="order-items">
+                            <% order.items.forEach(item => { %>
+                                <div class="order-item">
+                                    <img src="<%= item.product.image %>" alt="<%= item.name %>">
+                                    <div class="order-item-info">
+                                        <h4><%= item.name %></h4>
+                                        <p>Quantity: <%= item.quantity %> × $<%= item.price.toFixed(2) %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                        
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <strong>Total:</strong> $<%= order.totalPrice.toFixed(2) %>
+                            </div>
+                            <div class="order-payment">
+                                <i class="fas fa-credit-card"></i> <%= order.paymentMethod %>
+                            </div>
+                        </div>
+                        
+                        <div class="order-address">
+                            <strong>Shipping Address:</strong>
+                            <%= order.shippingAddress.street %>, 
+                            <%= order.shippingAddress.city %>, 
+                            <%= order.shippingAddress.state %> 
+                            <%= order.shippingAddress.zipCode %>, 
+                            <%= order.shippingAddress.country %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

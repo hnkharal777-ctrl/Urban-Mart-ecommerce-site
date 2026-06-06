@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<section class="products-section">
+    <div class="container">
+        <h1>Our Products</h1>
+        
+        <div class="filters">
+            <form action="/products" method="GET" class="filter-form">
+                <div class="filter-group">
+                    <select name="category" onchange="this.form.submit()">
+                        <option value="all" <%= category === 'all' ? 'selected' : '' %>>All Categories</option>
+                        <option value="Electronics" <%= category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
+                        <option value="Clothing" <%= category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
+                        <option value="Books" <%= category === 'Books' ? 'selected' : '' %>>Books</option>
+                        <option value="Home" <%= category === 'Home' ? 'selected' : '' %>>Home</option>
+                        <option value="Sports" <%= category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                        <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <input type="text" name="search" placeholder="Search products..." value="<%= search %>">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <% if (products.length === 0) { %>
+            <div class="no-products">
+                <p>No products found.</p>
+            </div>
+        <% } else { %>
+            <div class="products-grid">
+                <% products.forEach(product => { %>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="<%= product.image %>" alt="<%= product.name %>">
+                            <% if (product.stock === 0) { %>
+                                <span class="badge badge-danger">Out of Stock</span>
+                            <% } %>
+                        </div>
+                        <div class="product-info">
+                            <h3><%= product.name %></h3>
+                            <p class="product-category"><%= product.category %></p>
+                            <p class="product-price">$<%= product.price.toFixed(2) %></p>
+                            <div class="product-actions">
+                                <a href="/products/<%= product._id %>" class="btn btn-secondary btn-sm">
+                                    View Details
+                                </a>
+                                <% if (user && product.stock > 0) { %>
+                                    <button 
+                                        onclick="addToCart('<%= product._id %>')" 
+                                        class="btn btn-primary btn-sm">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('partials/footer') %>
